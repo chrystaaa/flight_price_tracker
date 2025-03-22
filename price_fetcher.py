@@ -1,7 +1,17 @@
+import os
+from dotenv import load_dotenv
 import requests
 
+load_dotenv()
+
 def fetch_flight_price(origin, destination, date):
-    url = "http://127.0.0.1:5000/flights"
+    # Get the API URL from the environment variable
+    url = os.getenv("API_URL")
+    
+    if not url:
+        print("Error: API URL not found in environment variables.")
+        return None
+
     params = {
         "origin": origin,
         "destination": destination,
@@ -10,7 +20,7 @@ def fetch_flight_price(origin, destination, date):
 
     try:
         response = requests.get(url, params=params)
-        response.raise_for_status()
+        response.raise_for_status() 
         data = response.json()
         price = data.get("price")
         print(f"Price from {origin} to {destination} on {date}: €{price}")
